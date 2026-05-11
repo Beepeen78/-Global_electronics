@@ -1,0 +1,13 @@
+# PBIX scratch extraction
+_pbix_extract/
+
+# Office / OS
+~$*
+Thumbs.db
+.DS_Store
+
+# Python (if you add scripts later)
+__pycache__/
+*.py[cod]
+.venv/
+venv/
