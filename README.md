@@ -17,6 +17,7 @@ Portfolio project that combines a **Global Electronics** sales dataset (CSV) wit
 | `Exchange_Rates.csv` | Daily FX rates to support USD normalization |
 | `Data_Dictionary.csv` | Field-level definitions for all source tables |
 | `global_electronics.pbix` | Power BI Desktop report and data model |
+| `global_electronics.pdf` | Exported report (PDF); same pages as below |
 
 ---
 
@@ -49,6 +50,26 @@ Relationships connect facts to dimensions on keys such as `CustomerKey`, `Produc
 | **Customer analysis** | Customer counts, repeat buyers, average revenue, top customers, segments, and order-behavior scatter |
 
 Theme: custom **Global Electronics** palette on a current Power BI base theme.
+
+### Report screenshots
+
+Images are rendered from [`global_electronics.pdf`](global_electronics.pdf) (one image per report page).
+
+#### Executive summary
+
+![Executive summary — KPIs, monthly revenue trend, category and top-product bars, slicers](docs/images/01-executive-summary.png)
+
+#### Geographic analysis
+
+![Geographic analysis — map, revenue by country, store type and continent views](docs/images/02-geographic-analysis.png)
+
+#### Product analysis
+
+![Product analysis — category and product bars, scatter, pivot by year, trends](docs/images/03-product-analysis.png)
+
+#### Customer analysis
+
+![Customer analysis — customer KPIs, revenue by country, top customers, segments](docs/images/04-customer-analysis.png)
 
 ---
 
