@@ -1,138 +1,86 @@
-# Global Electronics — Analytics & Power BI
+README
 
-Portfolio project that combines a **Global Electronics** sales dataset (CSV) with a **Power BI** semantic model and multi-page report. Built for learning: star-schema modeling, DAX measures, and dashboard design.
+# Global Electronics Sales Report
+
+Power BI analysis of **Global Electronics** retail sales: revenue trends, geographic and store-channel views, category and product performance, and customer behavior. This repository ships the report package, a fixed-layout PDF export, supporting CSV datasets from the same workspace, and readme previews rendered from that PDF so GitHub visitors see the visuals without opening files.
 
 **Repository:** [github.com/Beepeen78/-Global_electronics](https://github.com/Beepeen78/-Global_electronics)
 
----
+## Report preview
 
-## What’s included
+The images below are exported from [`global_electronics.pdf`](global_electronics.pdf) (four pages).
+
+### Page 1 — Executive summary
+
+Global Electronics–style KPIs (for example total revenue about **$55.8M**, orders **26K**, customers **12K**, total profit about **$32.7M**), monthly revenue trend, revenue by category, top products by revenue, and year/category slicers.
+
+![Global electronics sales report — page 1 executive summary](docs/readme/report-page-01.png)
+
+Global electronics sales report — page 1 executive summary
+
+### Page 2 — Geographic analysis
+
+Map and bar-chart views by **country** and **continent**, revenue split across **online vs store** style metrics, store counts, and slicers for year and country.
+
+![Global electronics sales report — page 2 geographic analysis](docs/readme/report-page-02.png)
+
+Global electronics sales report — page 2 geographic analysis
+
+### Page 3 — Product analysis
+
+Category and product revenue and profit, margin vs revenue scatter, revenue by year and category (line), pivot matrix by year, and slicers for year and category.
+
+![Global electronics sales report — page 3 product analysis](docs/readme/report-page-03.png)
+
+Global electronics sales report — page 3 product analysis
+
+### Page 4 — Customer analysis
+
+Customer KPIs (totals, repeat customers, average revenue), revenue by country, top customers by revenue, segment and order-behavior charts, and slicers for year and customer country.
+
+![Global electronics sales report — page 4 customer analysis](docs/readme/report-page-04.png)
+
+Global electronics sales report — page 4 customer analysis
+
+## What is in this repository
 
 | Asset | Description |
-|--------|----------------|
-| `Customers.csv` | Customer demographics and geography |
-| `Products.csv` | Product catalog, pricing, and category hierarchy |
-| `Sales.csv` | Order-line facts (dates, keys, quantity, currency) |
-| `Stores.csv` | Store locations and attributes |
-| `Exchange_Rates.csv` | Daily FX rates to support USD normalization |
-| `Data_Dictionary.csv` | Field-level definitions for all source tables |
-| `global_electronics.pbix` | Power BI Desktop report and data model |
-| `global_electronics.pdf` | Exported report (PDF); same pages as below |
+|--------|-------------|
+| `global_electronics.pbix` | Power BI report and semantic model. **Import** pipeline from the CSVs in this folder (star schema with `dim_date` and a central measure table). PBIX metadata can show **cloud authoring**; if refresh prompts for paths, point Power Query to these files. **Azure Map** visuals may require sign-in depending on your environment. |
+| `global_electronics.pdf` | Pixel-perfect export of the report (used to generate the readme screenshots above). |
+| `*.csv` | Tabular datasets: `Sales`, `Customers`, `Products`, `Stores`, `Exchange_Rates`, plus `Data_Dictionary.csv` for field definitions. Use them for your own models or tooling; they back the shipped PBIX when connected as file sources. |
+| `docs/readme/` | PNG previews (`report-page-01.png` … `report-page-04.png`) extracted from the PDF for this readme. |
 
----
+## Getting started
 
-## Business context
+- **View the story quickly:** scroll the preview section above, or open [`global_electronics.pdf`](global_electronics.pdf) locally.
+- **Edit or explore interactively:** install [Power BI Desktop](https://powerbi.microsoft.com/desktop/), open `global_electronics.pbix`, and **refresh** data (fix CSV folder paths if the file is moved). Sign in if prompted for map-backed visuals.
+- **Work offline with files:** import the CSVs into a new Power BI (or Fabric) model and rebuild or reconnect visuals if you want a fully self-contained, file-only workflow.
 
-The dataset represents **electronics retail** activity: customers place orders that reference **products** and are fulfilled through **stores** (including online-style scenarios where store key may indicate a non-physical channel in the model). **Exchange rates** allow revenue and margin analysis in a **common currency (USD)**.
+## Regenerating readme images
 
----
+If you replace the PDF and want new thumbnails:
 
-## Data model (high level)
+```bash
+pip install pymupdf
+python -c "import fitz; from pathlib import Path; pdf=Path('global_electronics.pdf'); out=Path('docs/readme'); out.mkdir(parents=True, exist_ok=True); doc=fitz.open(pdf); m=fitz.Matrix(2.25,2.25); [doc[i].get_pixmap(matrix=m,alpha=False).save(out/f'report-page-{i+1:02d}.png') for i in range(len(doc))]; doc.close()"
+```
 
-The Power BI model follows a **star schema** aligned with the CSVs:
+Then commit the updated `docs/readme/*.png` and adjust this readme if the page count changes.
 
-- **Fact:** `Sales` (grain: order line)
-- **Dimensions:** `Customers`, `Products`, `Stores`, `Exchange_Rates`
-- **Calendar:** `dim_date` (date table for time intelligence and slicers)
-- **Measures:** `Table_measure` (central measure table for KPIs and visuals)
+## Data model (reference)
 
-Relationships connect facts to dimensions on keys such as `CustomerKey`, `ProductKey`, and `StoreKey`, with dates tied to `dim_date` for trends and filters.
+- **Fact:** `Sales` (order line)  
+- **Dimensions:** `Customers`, `Products`, `Stores`, `Exchange_Rates`  
+- **Calendar:** `dim_date`  
+- **Measures:** `Table_measure` (DAX KPIs used across pages)
 
----
+## Credits
 
-## Report pages (`global_electronics.pbix`)
+Global Electronics–style dataset and scenario are typical of analytics learning tracks; cite your course or source if you republish.
 
-| Page | Focus |
-|------|--------|
-| **Executive summary** | KPIs, monthly revenue trend, revenue by category and top products, year/category slicers |
-| **Geographic analysis** | Map and charts by geography, store vs online style metrics, continent and store-type views |
-| **Product analysis** | Category and product performance, margin vs revenue scatter, pivot by year, scatter and line trends |
-| **Customer analysis** | Customer counts, repeat buyers, average revenue, top customers, segments, and order-behavior scatter |
-
-Theme: custom **Global Electronics** palette on a current Power BI base theme.
-
-### Report screenshots
-
-Images are rendered from [`global_electronics.pdf`](global_electronics.pdf) (one image per report page).
-
-#### Executive summary
-
-![Executive summary — KPIs, monthly revenue trend, category and top-product bars, slicers](docs/images/01-executive-summary.png)
-
-#### Geographic analysis
-
-![Geographic analysis — map, revenue by country, store type and continent views](docs/images/02-geographic-analysis.png)
-
-#### Product analysis
-
-![Product analysis — category and product bars, scatter, pivot by year, trends](docs/images/03-product-analysis.png)
-
-#### Customer analysis
-
-![Customer analysis — customer KPIs, revenue by country, top customers, segments](docs/images/04-customer-analysis.png)
-
----
-
-## Measures (examples)
-
-DAX measures live in **`Table_measure`**. Examples used across the report include:
-
-- **Revenue & profit:** Total Revenue USD, Total Profit, Profit Margin %  
-- **Volume:** Total Orders, Total Customers  
-- **Store / channel:** Online revenue, Store Revenue, Total Stores  
-- **Customer behavior:** Repeat Customers, Avg Customer Revenue, Avg Order Value  
-
-Exact definitions are in the PBIX (Data view → **Table_measure**, or **Modeling** tab in Power BI Desktop).
-
----
-
-## How to run it locally
-
-1. **Clone the repo**
-
-   ```bash
-   git clone https://github.com/Beepeen78/-Global_electronics.git
-   cd -Global_electronics
-   ```
-
-2. **Open the report**
-
-   - Install [Power BI Desktop](https://powerbi.microsoft.com/desktop/) (Windows).
-   - Open `global_electronics.pbix`.
-
-3. **Refresh data**
-
-   - If prompts appear for **folder / file** paths, point queries to the CSVs in **this same folder** (or wherever you cloned the repo).
-   - Use **Home → Refresh** after fixing paths.
-
-> **Note:** The PBIX was created in a **Power BI cloud–compatible** pipeline (metadata shows a recent cloud release). Desktop behavior (e.g. Azure Map visuals) may require signing in or enabling features per your environment.
-
----
-
-## Data dictionary
-
-Authoritative column descriptions are in **`Data_Dictionary.csv`** (table, field, description). Use it when writing SQL, Python, or documentation against the raw files.
-
----
-
-## Skills demonstrated
-
-- Relational modeling and **star schema** design  
-- **Power Query** (implied by the model) and **DAX** measures  
-- Dashboard layout: **executive summary** plus **drill-down** pages (product, customer, geography)  
-- **Interactivity:** slicers, cross-filtering, Top N patterns on visuals  
-- Version control for **datasets + PBIX** in Git  
-
----
-
-## License
-
-This project is shared for **learning and portfolio** purposes. The underlying **Global Electronics** style dataset is commonly used in analytics courses; if you reuse it publicly, keep attribution appropriate to your course or source.
-
----
+Power BI is a trademark of Microsoft Corporation.
 
 ## Author
 
 **Beepeen78** — [GitHub profile](https://github.com/Beepeen78)
-
-Suggestions or forks are welcome.
